@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+ <EditText
+     android:id="@+id/etRecipyName"
+    android:hint="Enter item name here"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+
+ <EditText
+android:id="@+id/RecipyType"
+android:layout_width="110dp"
+android:layout_height="wrap_content"
+android:text="Recipy Type:" />
+
+<Spinner
+android:id="@+id/spinnerCategory"
+android:layout_width="182dp"
+android:layout_height="39dp" />
+
+
+<EditText
+android:id="@+id/etRecipyDescription"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:hint="Item Description" />
+
+
+
+
+    </LinearLayout>

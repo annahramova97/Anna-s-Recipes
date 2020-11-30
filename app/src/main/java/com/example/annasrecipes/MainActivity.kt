@@ -2,23 +2,184 @@ package com.example.annasrecipes
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import android.content.Context
+import android.view.Menu
+import android.view.MenuItem
+
+import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
+import com.example.annasrecipes.adapter.RecipesAdapter
+import com.example.annasrecipes.data.AppDatabase
+import com.example.annasrecipes.data.Recipes
+import com.example.annasrecipes.touch.RecipesRecyclerTouchCallback
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.view.*
+import kotlinx.android.synthetic.main.recipy_row.view.*
+import java.util.*
 
-class MainActivity : AppCompatActivity() {
 
-    private var layoutManager: RecyclerView.LayoutManager? = null;
-    private var adapter: RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>? = null
+class MainActivity : AppCompatActivity(), RecipyDialog.RecipyHandler {
+
+    lateinit var recipyAdapter: RecipesAdapter
+    companion object {
+        const val KEY_EDIT = "KEY_EDIT"
+        const val PREF_NAME = "PREFTODO"
+        const val KEY_STARTED = "KEY_STARTED"
+        const val KEY_LAST_USED = "KEY_LAST_USED"
+        const val KEY_DETAILS = "KEY_DETAILS"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        //setSupportActionBar(findViewById(R.id.toolbar))
 
-        layoutManager = LinearLayoutManager(this)
-        recyclerView.layoutManager = layoutManager
+        //val image: ImageView =  findViewById<FloatingActionButton>(R.id.img)
 
-        adapter = RecyclerViewAdapter ()
-        recyclerView.adapter = adapter
+       // findViewById<ConstraintLayout>(R.id.constraintLayout) = title
+//        findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
+//            showAddItemDialog()
+//            )
+//
+//        }
+
+//        if (!wasStartedBefore()) {
+//            MaterialTapTargetPrompt.Builder(this)
+//                .setTarget(R.id.fab)
+//                .setPrimaryText("Create new item")
+//                .setSecondaryText("Click here to create new items")
+//                .show()
+//        }
+
+
+        Thread {
+            var recipesList = AppDatabase.getInstance(this).recipyDao().getAllItems()
+
+            runOnUiThread{
+                recipyAdapter =
+                    RecipesAdapter(this, recipesList)
+                recyclerView.adapter = recipyAdapter
+
+                val itemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+                recyclerView.addItemDecoration(itemDecoration)
+
+                val touchCallbakList =
+                    RecipesRecyclerTouchCallback(
+                        recipyAdapter
+                    )
+                val itemTouchHelper = ItemTouchHelper(touchCallbakList)
+                itemTouchHelper.attachToRecyclerView(recyclerView)
+
+            }
+        }.start()
+
+        saveStartInfo()
+
     }
+
+    fun saveStartInfo() {
+        var sharedPref = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        var editor = sharedPref.edit()
+        editor.putBoolean(KEY_STARTED, true)
+        editor.putString(KEY_LAST_USED, Date(System.currentTimeMillis()).toString())
+        editor.apply()
+    }
+
+    fun wasStartedBefore(): Boolean {
+        var sharedPref = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+
+        var lastTime = sharedPref.getString(KEY_LAST_USED, "This is the first time")
+        Toast.makeText(this, lastTime, Toast.LENGTH_LONG).show()
+
+        return sharedPref.getBoolean(KEY_STARTED, false)
+    }
+
+    fun showAddItemDialog() {
+        RecipyDialog().show(supportFragmentManager, "Dialog")
+    }
+
+    var editIndex: Int = -1
+
+    public fun showEditItemDialog(recipyToEdit: Recipes, index: Int) {
+        editIndex = index
+
+        val editItemDialog = RecipyDialog()
+
+        val bundle = Bundle()
+        bundle.putSerializable(KEY_EDIT, recipyToEdit)
+        editItemDialog.arguments = bundle
+
+        editItemDialog.show(supportFragmentManager, "EDITDIALOG")
+    }
+
+//    public fun showDetailsItemDialog(recipyToShow: Items, index: Int) {
+//        editIndex = index
+//
+//        val detailsItemDialog = DetailsDialog()
+//
+//        val bundle = Bundle()
+//        bundle.putSerializable(KEY_DETAILS, recipyToShow)
+//        detailsItemDialog.arguments = bundle
+//        detailsItemDialog.show(supportFragmentManager, "DETAILSDIALOG")
+//    }
+
+//
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+
+        if (item.itemId == R.id.action_settings){
+
+            Toast.makeText(this, "SETTINGS",
+                Toast.LENGTH_LONG).show()
+
+        } else if (item.itemId == R.id.add) {
+            .showAddItemDialog()
+
+
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+
+    override fun recipyCreated(recipy: Recipes) {
+        saveRecipy(recipy)
+    }
+
+    private fun saveRecipy(recipy: Recipes) {
+        Thread{
+            AppDatabase.getInstance(this).recipyDao().insertItem(recipy)
+
+            runOnUiThread {
+                recipyAdapter.addRecipy(recipy)
+            }
+        }.start()
+    }
+
+    override fun recipyUpdated(recipy: Recipes)  {
+        Thread{
+            AppDatabase.getInstance(this).recipyDao().updateItem(recipy)
+
+            runOnUiThread {
+                recipyAdapter.updateRecipy(recipy, editIndex)
+            }
+        }.start()
+    }
+
+    override fun onRestart() {
+        super.onRestart();
+        recyclerView.removeAllViewsInLayout();
+    }
+
 }

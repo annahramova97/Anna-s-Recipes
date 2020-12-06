@@ -1,22 +1,20 @@
 package com.example.annasrecipes
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.content.Context
+import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.annasrecipes.adapter.RecipesAdapter
 import com.example.annasrecipes.data.AppDatabase
 import com.example.annasrecipes.data.Recipes
 import com.example.annasrecipes.touch.RecipesRecyclerTouchCallback
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.view.*
-import kotlinx.android.synthetic.main.recipy_row.view.*
+
 import java.util.*
 
 
@@ -29,16 +27,22 @@ class MainActivity : AppCompatActivity(), RecipyDialog.RecipyHandler {
         const val KEY_STARTED = "KEY_STARTED"
         const val KEY_LAST_USED = "KEY_LAST_USED"
         const val KEY_DETAILS = "KEY_DETAILS"
+        const val REQUEST_CODE = 42
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+
         //setSupportActionBar(findViewById(R.id.toolbar))
 
         //val image: ImageView =  findViewById<FloatingActionButton>(R.id.img)
 
-       // findViewById<ConstraintLayout>(R.id.constraintLayout) = title
+
+        // findViewById<ConstraintLayout>(R.id.constraintLayout) = title
 //        findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
 //            showAddItemDialog()
 //            )
@@ -57,9 +61,9 @@ class MainActivity : AppCompatActivity(), RecipyDialog.RecipyHandler {
         Thread {
             var recipesList = AppDatabase.getInstance(this).recipyDao().getAllItems()
 
-            runOnUiThread{
-                recipyAdapter =
-                    RecipesAdapter(this, recipesList)
+            runOnUiThread {
+                recipyAdapter = RecipesAdapter(this, recipesList)
+
                 recyclerView.adapter = recipyAdapter
 
                 val itemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
@@ -77,7 +81,34 @@ class MainActivity : AppCompatActivity(), RecipyDialog.RecipyHandler {
 
         saveStartInfo()
 
+//        val button: Button = findViewById(R.id.btnPhoto)
+//        findViewById<Button>(R.id.btnPhoto).setOnClickListener {
+//            Toast.makeText(this, "Here", Toast.LENGTH_SHORT).show()
+//            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+//            if (takePictureIntent.resolveActivity(this.packageManager) != null) {
+//                startActivityForResult(takePictureIntent, REQUEST_CODE)
+//            } else {
+//                Toast.makeText(this, "Unable", Toast.LENGTH_SHORT).show()
+//            }
+//        }
+
+
     }
+
+
+
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK){
+//            val takenImage = data?.extras?.get("data") as Bitmap
+//            image.setImageBitmap(takenImage)
+//
+//        }
+//        else {
+//            super.onActivityResult(requestCode, resultCode, data)
+//        }
+//    }
+
+
 
     fun saveStartInfo() {
         var sharedPref = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
@@ -145,7 +176,7 @@ class MainActivity : AppCompatActivity(), RecipyDialog.RecipyHandler {
                 Toast.LENGTH_LONG).show()
 
         } else if (item.itemId == R.id.add) {
-            .showAddItemDialog()
+            showAddItemDialog()
 
 
         }

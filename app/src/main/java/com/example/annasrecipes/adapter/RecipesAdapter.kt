@@ -1,29 +1,44 @@
 package com.example.annasrecipes.adapter
 
+//import com.example.annasrecipes.ScrollingActivity
+
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.annasrecipes.MainActivity
 import com.example.annasrecipes.R
-//import com.example.annasrecipes.ScrollingActivity
 import com.example.annasrecipes.data.AppDatabase
 import com.example.annasrecipes.data.Recipes
 import com.example.annasrecipes.touch.RecipesTouchHelperCallback
 import kotlinx.android.synthetic.main.recipy_row.view.*
 import java.util.*
 
+
 class RecipesAdapter : RecyclerView.Adapter<RecipesAdapter.ViewHolder>, RecipesTouchHelperCallback {
 
+    var image: Bitmap? = null
     var recipes = mutableListOf<Recipes>()
     val context: Context
 
-    constructor(context: Context, listItems: List<Recipes>) {
+
+    constructor(
+        context: Context,
+        listItems: List<Recipes>
+        ) {
         this.context = context
         recipes.addAll(listItems)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -46,13 +61,11 @@ class RecipesAdapter : RecyclerView.Adapter<RecipesAdapter.ViewHolder>, RecipesT
         holder.description.setText(current.recipyDescription)
 
 
-        holder.btnDelete.setOnClickListener {
-            deleteRecipy(holder.adapterPosition)
-        }
+//        holder.btnDelete.setOnClickListener {
+//            deleteRecipy(holder.adapterPosition)
+//        }
 
-        holder.btnDelete.setOnClickListener {
-           //todo
-        }
+
 
         holder.btnEdit.setOnClickListener {
             (context as MainActivity).showEditItemDialog(
@@ -60,13 +73,27 @@ class RecipesAdapter : RecyclerView.Adapter<RecipesAdapter.ViewHolder>, RecipesT
             )
         }
 
+        val packageManager = context.packageManager
+
+        holder.btnPhoto.setOnClickListener {
+            //Toast.makeText(this, "Here", Toast.LENGTH_SHORT).show()
+            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            if (takePictureIntent.resolveActivity(packageManager) != null) {
+                (context as MainActivity).startActivityForResult(takePictureIntent, MainActivity.REQUEST_CODE)
+                holder.ivIcon.setImageBitmap(image)
+
+            } else {
+                //Toast.makeText(this, "Unable", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
+
 //        holder.btnDetails.setOnClickListener {
 //            (context as MainActivity).showDetailsItemDialog(
 //                recipes[holder.adapterPosition], holder.adapterPosition
 //            )
 //        }
-
-
 
 
         //food
@@ -85,6 +112,20 @@ class RecipesAdapter : RecyclerView.Adapter<RecipesAdapter.ViewHolder>, RecipesT
 
 
     }
+
+
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK){
+            val takenImage = data?.extras?.get("data") as Bitmap
+            image = takenImage
+
+           // val imageDrawable: Drawable = BitmapDrawable(Resources.getSystem(), takenImage)
+
+        }
+    }
+
 
 
 
@@ -121,7 +162,7 @@ class RecipesAdapter : RecyclerView.Adapter<RecipesAdapter.ViewHolder>, RecipesT
 
         val name = itemView.title
         val description = itemView.description
-        val btnDelete = itemView.btnDelete
+        //val btnDelete = itemView.btnDelete
         val btnEdit = itemView.btnEdit
         val btnDetails = itemView.btnDetails
         val btnPhoto = itemView.btnPhoto
@@ -138,5 +179,10 @@ class RecipesAdapter : RecyclerView.Adapter<RecipesAdapter.ViewHolder>, RecipesT
         Collections.swap(recipes, fromPosition, toPosition)
         notifyItemMoved(fromPosition, toPosition)
     }
+
+    companion object {
+        const val REQUEST_CODE = 42
+    }
+
 
 }

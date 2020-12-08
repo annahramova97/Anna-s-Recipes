@@ -2,16 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <EditText
-        android:id="@+id/nameR"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    android:layout_height="match_parent"
+    android:id="@+id/det">
 
 
-    <EditText
-        android:id="@+id/descriptionR"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/nameR"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <EditText
+            android:id="@+id/descriptionR"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+          />
+
+
+        <ImageView
+            android:id="@+id/imageR"
+            android:layout_width="match_parent"
+            android:layout_height="188dp"
+            android:layout_marginTop="200dp" />
+
+
 </LinearLayout>

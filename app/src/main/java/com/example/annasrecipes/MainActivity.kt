@@ -2,13 +2,17 @@ package com.example.annasrecipes
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.annasrecipes.RecipesDetails.Companion.newInstance
 import com.example.annasrecipes.adapter.RecipesAdapter
 import com.example.annasrecipes.data.AppDatabase
 import com.example.annasrecipes.data.Recipes
@@ -145,10 +149,10 @@ class MainActivity : AppCompatActivity(), RecipyDialog.RecipyHandler {
         editItemDialog.show(supportFragmentManager, "EDITDIALOG")
     }
 
-//    public fun showDetailsItemDialog(recipyToShow: Items, index: Int) {
+//    public fun showDetailsItemDialog(recipyToShow: Recipes, index: Int) {
 //        editIndex = index
 //
-//        val detailsItemDialog = DetailsDialog()
+//        val detailsItemDialog = RecipesDetails()
 //
 //        val bundle = Bundle()
 //        bundle.putSerializable(KEY_DETAILS, recipyToShow)
@@ -156,7 +160,34 @@ class MainActivity : AppCompatActivity(), RecipyDialog.RecipyHandler {
 //        detailsItemDialog.show(supportFragmentManager, "DETAILSDIALOG")
 //    }
 
+    fun showDialog(recipyToShow: Recipes, index: Int) {
+
+
+        val details = RecipesDetails.newInstance(recipyToShow.recipyName.toString())
+        Log.i("IMPORTANT",recipyToShow.recipyName)
+        val bundle = Bundle()
+        bundle.putSerializable(KEY_DETAILS, recipyToShow.recipyName)
+        details.arguments = bundle
+
+
+        details.show(supportFragmentManager, "DIALOG")
+
+        //bundle.putString(recipyToShow.recipyName, "KEY_DETAILS");
+
+
+//        val ft: FragmentTransaction = fragmentManager.beginTransaction()
+//        val prev: Fragment? = fragmentManager.findFragmentByTag("dialog")
+//        if (prev != null) {
+//            ft.remove(prev)
+//        }
+//        ft.addToBackStack(null)
 //
+//        // Create and show the dialog.
+//        val newFragment: DialogFragment = MyDialogFragment.newInstance(mStackLevel)
+//        newFragment.show(ft, "dialog")
+    }
+
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu, menu)

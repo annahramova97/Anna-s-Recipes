@@ -5,19 +5,16 @@ package com.example.annasrecipes.adapter
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.res.Resources
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.annasrecipes.MainActivity
 import com.example.annasrecipes.R
+import com.example.annasrecipes.RecipesDetails
 import com.example.annasrecipes.data.AppDatabase
 import com.example.annasrecipes.data.Recipes
 import com.example.annasrecipes.touch.RecipesTouchHelperCallback
@@ -30,6 +27,7 @@ class RecipesAdapter : RecyclerView.Adapter<RecipesAdapter.ViewHolder>, RecipesT
     var image: Bitmap? = null
     var recipes = mutableListOf<Recipes>()
     val context: Context
+
 
 
     constructor(
@@ -89,11 +87,24 @@ class RecipesAdapter : RecyclerView.Adapter<RecipesAdapter.ViewHolder>, RecipesT
 
 
 
-//        holder.btnDetails.setOnClickListener {
-//            (context as MainActivity).showDetailsItemDialog(
-//                recipes[holder.adapterPosition], holder.adapterPosition
-//            )
-//        }
+        holder.btnDetails.setOnClickListener {
+            (context as MainActivity).showDialog(
+                recipes[holder.adapterPosition], holder.adapterPosition
+
+
+            )
+            Log.d("name adapter", recipes[holder.adapterPosition].recipyName.toString() )
+
+
+//            val fragmentB = RecipesDetails.newInstance(current.recipyName)
+//            Log.i("Name Adapter", current.recipyName.toString())
+//            (context as MainActivity).supportFragmentManager.beginTransaction()
+//                .replace(R.id.constraintLayout, fragmentB, "fragmnetId")
+//                .addToBackStack(null)
+//                .commit();
+
+
+        }
 
 
         //food
@@ -151,6 +162,8 @@ class RecipesAdapter : RecyclerView.Adapter<RecipesAdapter.ViewHolder>, RecipesT
         notifyItemInserted(recipes.lastIndex)
         Log.i("size ADD", recipes.size.toString())
 
+
+
     }
 
     public fun updateRecipy(recipy: Recipes, editIndex: Int) {
@@ -183,6 +196,8 @@ class RecipesAdapter : RecyclerView.Adapter<RecipesAdapter.ViewHolder>, RecipesT
     companion object {
         const val REQUEST_CODE = 42
     }
+
+
 
 
 }

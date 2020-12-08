@@ -18,6 +18,7 @@ import com.example.annasrecipes.data.AppDatabase
 import com.example.annasrecipes.data.Recipes
 import com.example.annasrecipes.touch.RecipesRecyclerTouchCallback
 import kotlinx.android.synthetic.main.activity_main.*
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
 
 import java.util.*
 
@@ -39,28 +40,6 @@ class MainActivity : AppCompatActivity(), RecipyDialog.RecipyHandler {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         recyclerView.layoutManager = LinearLayoutManager(this)
-
-
-        //setSupportActionBar(findViewById(R.id.toolbar))
-
-        //val image: ImageView =  findViewById<FloatingActionButton>(R.id.img)
-
-
-        // findViewById<ConstraintLayout>(R.id.constraintLayout) = title
-//        findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
-//            showAddItemDialog()
-//            )
-//
-//        }
-
-//        if (!wasStartedBefore()) {
-//            MaterialTapTargetPrompt.Builder(this)
-//                .setTarget(R.id.fab)
-//                .setPrimaryText("Create new item")
-//                .setSecondaryText("Click here to create new items")
-//                .show()
-//        }
-
 
         Thread {
             var recipesList = AppDatabase.getInstance(this).recipyDao().getAllItems()
@@ -85,33 +64,7 @@ class MainActivity : AppCompatActivity(), RecipyDialog.RecipyHandler {
 
         saveStartInfo()
 
-//        val button: Button = findViewById(R.id.btnPhoto)
-//        findViewById<Button>(R.id.btnPhoto).setOnClickListener {
-//            Toast.makeText(this, "Here", Toast.LENGTH_SHORT).show()
-//            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-//            if (takePictureIntent.resolveActivity(this.packageManager) != null) {
-//                startActivityForResult(takePictureIntent, REQUEST_CODE)
-//            } else {
-//                Toast.makeText(this, "Unable", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-
-
     }
-
-
-
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK){
-//            val takenImage = data?.extras?.get("data") as Bitmap
-//            image.setImageBitmap(takenImage)
-//
-//        }
-//        else {
-//            super.onActivityResult(requestCode, resultCode, data)
-//        }
-//    }
-
 
 
     fun saveStartInfo() {
@@ -137,7 +90,7 @@ class MainActivity : AppCompatActivity(), RecipyDialog.RecipyHandler {
 
     var editIndex: Int = -1
 
-    public fun showEditItemDialog(recipyToEdit: Recipes, index: Int) {
+    public fun showEditDialog(recipyToEdit: Recipes, index: Int) {
         editIndex = index
 
         val editItemDialog = RecipyDialog()
@@ -149,18 +102,9 @@ class MainActivity : AppCompatActivity(), RecipyDialog.RecipyHandler {
         editItemDialog.show(supportFragmentManager, "EDITDIALOG")
     }
 
-//    public fun showDetailsItemDialog(recipyToShow: Recipes, index: Int) {
-//        editIndex = index
-//
-//        val detailsItemDialog = RecipesDetails()
-//
-//        val bundle = Bundle()
-//        bundle.putSerializable(KEY_DETAILS, recipyToShow)
-//        detailsItemDialog.arguments = bundle
-//        detailsItemDialog.show(supportFragmentManager, "DETAILSDIALOG")
-//    }
 
-    fun showDialog(recipyToShow: Recipes, index: Int) {
+    fun showDetailsDialog(recipyToShow: Recipes, index: Int) {
+        editIndex = index
 
 
         val details = RecipesDetails.newInstance(recipyToShow.recipyName.toString())
@@ -174,17 +118,6 @@ class MainActivity : AppCompatActivity(), RecipyDialog.RecipyHandler {
 
         //bundle.putString(recipyToShow.recipyName, "KEY_DETAILS");
 
-
-//        val ft: FragmentTransaction = fragmentManager.beginTransaction()
-//        val prev: Fragment? = fragmentManager.findFragmentByTag("dialog")
-//        if (prev != null) {
-//            ft.remove(prev)
-//        }
-//        ft.addToBackStack(null)
-//
-//        // Create and show the dialog.
-//        val newFragment: DialogFragment = MyDialogFragment.newInstance(mStackLevel)
-//        newFragment.show(ft, "dialog")
     }
 
 
@@ -197,10 +130,6 @@ class MainActivity : AppCompatActivity(), RecipyDialog.RecipyHandler {
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-
         if (item.itemId == R.id.action_settings){
 
             Toast.makeText(this, "SETTINGS",

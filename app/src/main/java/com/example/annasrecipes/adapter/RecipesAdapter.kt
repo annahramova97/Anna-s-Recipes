@@ -59,14 +59,8 @@ class RecipesAdapter : RecyclerView.Adapter<RecipesAdapter.ViewHolder>, RecipesT
         holder.description.setText(current.recipyDescription)
 
 
-//        holder.btnDelete.setOnClickListener {
-//            deleteRecipy(holder.adapterPosition)
-//        }
-
-
-
         holder.btnEdit.setOnClickListener {
-            (context as MainActivity).showEditItemDialog(
+            (context as MainActivity).showEditDialog(
                 recipes[holder.adapterPosition], holder.adapterPosition
             )
         }
@@ -88,21 +82,11 @@ class RecipesAdapter : RecyclerView.Adapter<RecipesAdapter.ViewHolder>, RecipesT
 
 
         holder.btnDetails.setOnClickListener {
-            (context as MainActivity).showDialog(
+            (context as MainActivity).showDetailsDialog(
                 recipes[holder.adapterPosition], holder.adapterPosition
-
 
             )
             Log.d("name adapter", recipes[holder.adapterPosition].recipyName.toString() )
-
-
-//            val fragmentB = RecipesDetails.newInstance(current.recipyName)
-//            Log.i("Name Adapter", current.recipyName.toString())
-//            (context as MainActivity).supportFragmentManager.beginTransaction()
-//                .replace(R.id.constraintLayout, fragmentB, "fragmnetId")
-//                .addToBackStack(null)
-//                .commit();
-
 
         }
 

@@ -3,28 +3,40 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:minWidth="1000dp"
+    android:minHeight="450dp"
     android:id="@+id/det">
-
-
-
-        <EditText
-            android:id="@+id/nameR"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
-
-        <EditText
-            android:id="@+id/descriptionR"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-          />
 
 
         <ImageView
             android:id="@+id/imageR"
             android:layout_width="match_parent"
             android:layout_height="188dp"
-            android:layout_marginTop="200dp" />
+            />
+
+        <EditText
+            android:id="@+id/nameR"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Title:"
+            />
+
+        <EditText
+            android:id="@+id/descriptionR"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Instructions:"
+          />
+
+        <EditText
+            android:id="@+id/timeR"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Time:"
+            />
+
+
+
 
 
 </LinearLayout>

@@ -5,12 +5,10 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.widget.ArrayAdapter
-import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Spinner
 import androidx.fragment.app.DialogFragment
 import com.example.annasrecipes.data.Recipes
-import com.example.annasrecipes.R
 import kotlinx.android.synthetic.main.recipy_dialog.view.*
 
 
@@ -115,6 +113,7 @@ class RecipyDialog : DialogFragment() {
                 etRecipyName.text.toString(),
                 spinnerCategory.selectedItemPosition,
                 etRecipyDescription.text.toString()
+
             )
         )
     }

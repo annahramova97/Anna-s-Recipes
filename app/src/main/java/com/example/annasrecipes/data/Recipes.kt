@@ -1,4 +1,5 @@
 package com.example.annasrecipes.data
+import android.widget.ImageView
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey

@@ -4,6 +4,7 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.module.AppGlideModule
+import com.example.annasrecipes.MainActivity
 import com.example.annasrecipes.RecipesDetails
 
 @GlideModule
@@ -15,4 +16,11 @@ import com.example.annasrecipes.RecipesDetails
                 .fitCenter()
                 .into(imageView)
         }
+
+    fun downloadImag(activity: MainActivity,  myUrl: String, imageView: ImageView) {
+        Glide.with(activity)
+            .load(myUrl)
+            .fitCenter()
+            .into(imageView)
+    }
     }

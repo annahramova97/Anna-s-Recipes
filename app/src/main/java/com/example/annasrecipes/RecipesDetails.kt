@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 
 import com.example.annasrecipes.network.RecipesApi
@@ -55,10 +56,13 @@ class RecipesDetails : DialogFragment () {
             R.layout.recipy_details, null
         )
 
+
         nameR = dialogView.nameR
         descriptionR = dialogView.descriptionR
         timeR = dialogView.timeR
         viewImage = dialogView.imageR
+
+
 
 
         arguments?.let {
@@ -105,15 +109,18 @@ class RecipesDetails : DialogFragment () {
                     var i = 0
                     if (des != null) {
                         for (step in des){
-                              steps += des[i].step.toString() + "\n"
+                              steps += (i+1).toString() + ". "+  des[i].step.toString() + "\n"
                               i++
                         }
                     }
                     val time = result.results?.get(0)?.readyInMinutes.toString()
 
-                    nameR.setText(n)
-                    descriptionR.setText(steps)
-                    timeR.setText(time)
+                    nameR.setText("Title: " + n)
+                    nameR.setEnabled(false);
+                    descriptionR.setText("Instructions: \n" + steps)
+                    descriptionR.setEnabled(false)
+                    timeR.setText("Time: " + time)
+                    timeR.setEnabled(false)
 
 
                     viewImage?.let { GlideOptions().downloadImage(recipyDetails, result.results?.get(0)?.image.toString(),
@@ -121,7 +128,9 @@ class RecipesDetails : DialogFragment () {
                     ) }
 
 
-
+                }
+                else {
+                    Toast.makeText(context, "Try another one!", Toast.LENGTH_LONG).show()
                 }
             }
 

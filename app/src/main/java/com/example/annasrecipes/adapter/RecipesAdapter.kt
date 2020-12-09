@@ -27,30 +27,30 @@ class RecipesAdapter : RecyclerView.Adapter<RecipesAdapter.ViewHolder>, RecipesT
 
     var  takenImage: Bitmap? = null
     var recipes = mutableListOf<Recipes>(
-        Recipes(null, "Oatmeal with berries", 0 , "Porridge makes for a healthy and tasty breakfast"),
-        Recipes(null, "Banana split", 0 , "Porridge makes for a healthy and tasty breakfast"),
-        Recipes(null, "Porridge", 0 , "Porridge makes for a healthy and tasty breakfast"),
-        Recipes(null, "Poatched egg", 0 , "Porridge makes for a healthy and tasty breakfast"),
-        Recipes(null, "Omelette", 0 , "Porridge makes for a healthy and tasty breakfast"),
-        Recipes(null, "Pancakes", 0 , "Porridge makes for a healthy and tasty breakfast"),
-        Recipes(null, "Pasta", 1 , "Porridge makes for a healthy and tasty breakfast"),
-        Recipes(null, "Quesadilla", 1 , "Porridge makes for a healthy and tasty breakfast"),
-        Recipes(null, "Roast turkey", 1 , "Porridge makes for a healthy and tasty breakfast"),
-        Recipes(null, "Lasagne", 1 , "Porridge makes for a healthy and tasty breakfast"),
-        Recipes(null, "Bulgur", 1 , "Porridge makes for a healthy and tasty breakfast"),
-        Recipes(null, "Rice with vegetables", 1 , "Porridge makes for a healthy and tasty breakfast"),
-        Recipes(null, "Borsch", 2 , ""),
-        Recipes(null, "Chicken soup", 2 , ""),
-        Recipes(null, "Tomato soup", 2 , ""),
-        Recipes(null, "Brocolli soup", 2 , ""),
-        Recipes(null, "Banana smoothie", 3 , ""),
-        Recipes(null, "Greek salad", 4 , ""),
-        Recipes(null, "Warm salad", 4, ""),
-        Recipes(null, "Vitamin salad", 4 , ""),
-        Recipes(null, "Bruschetta", 5 , ""),
-        Recipes(null, "Sandwich", 5 , ""),
-        Recipes(null, "Muffins", 6 , ""),
-        Recipes(null, "Almond pie", 6 , "")
+        Recipes(null, "Oatmeal with berries", 0 , "Porridge makes for a healthy and tasty breakfast", false),
+        Recipes(null, "Banana split", 0 , "Porridge makes for a healthy and tasty breakfast",false),
+        Recipes(null, "Porridge", 0 , "Porridge makes for a healthy and tasty breakfast", false),
+        Recipes(null, "Poatched egg", 0 , "Porridge makes for a healthy and tasty breakfast", false),
+        Recipes(null, "Omelette", 0 , "Porridge makes for a healthy and tasty breakfast", false),
+        Recipes(null, "Pancakes", 0 , "Porridge makes for a healthy and tasty breakfast", false),
+        Recipes(null, "Pasta", 1 , "Porridge makes for a healthy and tasty breakfast", false),
+        Recipes(null, "Quesadilla", 1 , "Porridge makes for a healthy and tasty breakfast", false),
+        Recipes(null, "Roast turkey", 1 , "Porridge makes for a healthy and tasty breakfast", false),
+        Recipes(null, "Lasagne", 1 , "Porridge makes for a healthy and tasty breakfast", false),
+        Recipes(null, "Bulgur", 1 , "Porridge makes for a healthy and tasty breakfast", false),
+        Recipes(null, "Rice with vegetables", 1 , "Porridge makes for a healthy and tasty breakfast", false),
+        Recipes(null, "Borsch", 2 , "", false),
+        Recipes(null, "Chicken soup", 2 , "", false),
+        Recipes(null, "Tomato soup", 2 , "", false),
+        Recipes(null, "Brocolli soup", 2 , "", false),
+        Recipes(null, "Banana smoothie", 3 , "", false),
+        Recipes(null, "Greek salad", 4 , "", false),
+        Recipes(null, "Warm salad", 4, "", false),
+        Recipes(null, "Vitamin salad", 4 , "", false),
+        Recipes(null, "Bruschetta", 5 , "", false),
+        Recipes(null, "Sandwich", 5 , "", false),
+        Recipes(null, "Muffins", 6 , "", false),
+        Recipes(null, "Almond pie", 6 , "", false)
 
            )
 
@@ -102,10 +102,10 @@ class RecipesAdapter : RecyclerView.Adapter<RecipesAdapter.ViewHolder>, RecipesT
             if (takePictureIntent.resolveActivity(packageManager) != null) {
                 (context as MainActivity).startActivityForResult(takePictureIntent, MainActivity.REQUEST_CODE)
                 Log.d("buttonPhoto!!!!", takePictureIntent?.toString())
-//                (context as MainActivity).setPhoto(
-//                recipes[holder.adapterPosition], holder.adapterPosition
+                (context as MainActivity).photo(
+                recipes[holder.adapterPosition], holder.adapterPosition
 
-                //)
+                )
 
 
             } else {
@@ -153,7 +153,7 @@ class RecipesAdapter : RecyclerView.Adapter<RecipesAdapter.ViewHolder>, RecipesT
 
 
 
-        if (recipes[holder.adapterPosition].recipyName == "Banana split") {
+        if (recipes[holder.adapterPosition].photo) {
             Log.d("PHOTO", recipes[holder.adapterPosition].recipyName)
             holder.ivIcon.setImageBitmap(MainActivity.takenImage)
         }
@@ -174,6 +174,7 @@ class RecipesAdapter : RecyclerView.Adapter<RecipesAdapter.ViewHolder>, RecipesT
         if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK){
             takenImage = data?.extras?.get("data") as Bitmap
             Log.d("RESULT", takenImage?.toString())
+
 
 
 

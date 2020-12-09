@@ -112,7 +112,8 @@ class RecipyDialog : DialogFragment() {
                 null,
                 etRecipyName.text.toString(),
                 spinnerCategory.selectedItemPosition,
-                etRecipyDescription.text.toString()
+                etRecipyDescription.text.toString(),
+            false
 
             )
         )

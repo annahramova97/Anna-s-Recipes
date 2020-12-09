@@ -43,6 +43,8 @@ class RecipesDetails : DialogFragment () {
     lateinit var nameR: EditText
     lateinit var descriptionR: EditText
     lateinit var timeR : EditText
+    lateinit var vegetarianR : EditText
+
     private var viewImage: ImageView? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -60,6 +62,7 @@ class RecipesDetails : DialogFragment () {
         nameR = dialogView.nameR
         descriptionR = dialogView.descriptionR
         timeR = dialogView.timeR
+        vegetarianR = dialogView.vegetarianR
         viewImage = dialogView.imageR
 
 
@@ -95,25 +98,33 @@ class RecipesDetails : DialogFragment () {
             override fun onResponse(call: Call<Base>, response: Response<Base>) {
                 Log.i("Response", response.code().toString())
                 Log.i("body", response.body()?.toString())
-                val result = response.body()
+                val result = response?.body()
 
 
 
-                if (result != null) {
+                if (result != null && result?.results?.size!! > 0) {
                     Log.i("result", result.results?.get(0)?.summary.toString())
                     Log.i("SIZE", result.results?.size.toString())
 
                     val n = result.results?.get(0)?.title.toString()
                     val des = result.results?.get(0)?.analyzedInstructions?.get(0)?.steps
+                    val veg = result.results?.get(0)?.vegetarian
+
+
+
                     var steps : String? = ""
                     var i = 0
                     if (des != null) {
                         for (step in des){
                               steps += (i+1).toString() + ". "+  des[i].step.toString() + "\n"
+
                               i++
                         }
                     }
                     val time = result.results?.get(0)?.readyInMinutes.toString()
+
+
+
 
                     nameR.setText("Title: " + n)
                     nameR.setEnabled(false);
@@ -121,6 +132,8 @@ class RecipesDetails : DialogFragment () {
                     descriptionR.setEnabled(false)
                     timeR.setText("Time: " + time)
                     timeR.setEnabled(false)
+                    vegetarianR.setText("Vegetarian " + veg.toString())
+                    vegetarianR.setEnabled(false)
 
 
                     viewImage?.let { GlideOptions().downloadImage(recipyDetails, result.results?.get(0)?.image.toString(),

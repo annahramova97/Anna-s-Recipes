@@ -10,6 +10,7 @@ data class Recipes(
     @PrimaryKey(autoGenerate = true) var recipyId: Long?,
     @ColumnInfo(name = "recipyName") var recipyName: String,
     @ColumnInfo(name = "recipyCategory") var recipyCategory: Int,
-    @ColumnInfo(name = "recipyDescription") var recipyDescription: String
+    @ColumnInfo(name = "recipyDescription") var recipyDescription: String,
+    @ColumnInfo(name = "photo") var photo: Boolean
 
 ) : Serializable

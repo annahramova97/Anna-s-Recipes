@@ -24,6 +24,8 @@
             android:id="@+id/nameR"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="#1190F4"
+            android:textStyle="bold"
 
 
             android:text="Title:"
@@ -35,6 +37,8 @@
             android:layout_height="wrap_content"
             android:text="Instructions:"
             android:inputType="none"
+            android:textStyle="bold"
+            android:textColor="#1190F4"
           />
 
         <EditText
@@ -43,7 +47,19 @@
             android:layout_height="wrap_content"
             android:text="Time:"
             android:inputType="none"
+            android:textStyle="bold"
+            android:textColor="#1190F4"
             />
+        <EditText
+            android:id="@+id/vegetarianR"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Vegeterian :"
+            android:inputType="none"
+            android:textStyle="bold"
+            android:textColor="#1190F4"
+            />
+
 
 
 

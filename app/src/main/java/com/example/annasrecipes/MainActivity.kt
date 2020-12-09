@@ -1,6 +1,7 @@
 package com.example.annasrecipes
 
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -29,9 +30,8 @@ import com.example.annasrecipes.touch.RecipesRecyclerTouchCallback
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.recipy_row.*
 import kotlinx.android.synthetic.main.recipy_row.view.*
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.IOException
+import java.io.*
+import java.io.File.separator
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -39,9 +39,6 @@ import java.util.*
 class MainActivity : AppCompatActivity(), RecipyDialog.RecipyHandler {
 
     lateinit var recipyAdapter: RecipesAdapter
-
-
-
 
     companion object {
         const val KEY_EDIT = "KEY_EDIT"
@@ -58,9 +55,6 @@ class MainActivity : AppCompatActivity(), RecipyDialog.RecipyHandler {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         recyclerView.layoutManager = LinearLayoutManager(this)
-
-
-
 
         Thread {
             var recipesList = AppDatabase.getInstance(this).recipyDao().getAllItems()
@@ -142,6 +136,12 @@ class MainActivity : AppCompatActivity(), RecipyDialog.RecipyHandler {
 
     }
 
+    fun photo(recipyToShow: Recipes, index: Int) {
+        editIndex = index
+        recipyToShow.photo = true
+
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -197,7 +197,6 @@ class MainActivity : AppCompatActivity(), RecipyDialog.RecipyHandler {
     }
 
 
-    lateinit var currentPhotoPath: String
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -208,63 +207,66 @@ class MainActivity : AppCompatActivity(), RecipyDialog.RecipyHandler {
             //imageTaken.setImageBitmap(takenImage);
 
 
-
             Log.d("RESULT", takenImage?.toString())
+            saveImage(takenImage!!, this)
 
 
         }
     }
 
+    private fun saveImage(bitmap: Bitmap, context: Context) {
+        Log.d("SAVE", takenImage?.toString())
+        if (android.os.Build.VERSION.SDK_INT >= 29) {
+            val values = contentValues()
+            values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/" )
+            values.put(MediaStore.Images.Media.IS_PENDING, true)
+            // RELATIVE_PATH and IS_PENDING are introduced in API 29.
 
+            val uri: Uri? = context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+            if (uri != null) {
+                saveImageToStream(bitmap, context.contentResolver.openOutputStream(uri))
+                values.put(MediaStore.Images.Media.IS_PENDING, false)
+                context.contentResolver.update(uri, values, null, null)
+            }
+        } else {
+            val directory = File(Environment.getExternalStorageDirectory().toString() + separator )
+            // getExternalStorageDirectory is deprecated in API 29
 
-    fun ph(bitmap: Bitmap): Bitmap{
-
-        return bitmap
-    }
-
-
-    @Throws(IOException::class)
-    private fun createImageFile(): File {
-        // Create an image file name
-        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val storageDir: File? = this!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        return File.createTempFile(
-            "JPEG_${timeStamp}_", /* prefix */
-            ".jpg", /* suffix */
-            storageDir /* directory */
-        ).apply {
-            // Save a file: path for use with ACTION_VIEW intents
-            currentPhotoPath = absolutePath
-        }
-    }
-
-    private fun dispatchTakePictureIntent() {
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            // Ensure that there's a camera activity to handle the intent
-            takePictureIntent.resolveActivity(packageManager)?.also {
-                // Create the File where the photo should go
-                val photoFile: File? = try {
-                    createImageFile()
-                } catch (ex: IOException) {
-                    // Error occurred while creating the File
-
-                    null
-                }
-                // Continue only if the File was successfully created
-                photoFile?.also {
-                    val photoURI: Uri = FileProvider.getUriForFile(
-                        this,
-                        "com.example.android.fileprovider",
-                        it
-                    )
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                    //startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-                }
+            if (!directory.exists()) {
+                directory.mkdirs()
+            }
+            val fileName = System.currentTimeMillis().toString() + ".png"
+            val file = File(directory, fileName)
+            saveImageToStream(bitmap, FileOutputStream(file))
+            if (file.absolutePath != null) {
+                val values = contentValues()
+                values.put(MediaStore.Images.Media.DATA, file.absolutePath)
+                // .DATA is deprecated in API 29
+                context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
             }
         }
-
-
-
     }
+
+    private fun contentValues() : ContentValues {
+        val values = ContentValues()
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+        values.put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis() / 1000);
+        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+        return values
+    }
+
+    private fun saveImageToStream(bitmap: Bitmap, outputStream: OutputStream?) {
+        if (outputStream != null) {
+            try {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                outputStream.close()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+
+
 }
 

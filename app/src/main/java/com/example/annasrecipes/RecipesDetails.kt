@@ -132,7 +132,7 @@ class RecipesDetails : DialogFragment () {
                     descriptionR.setEnabled(false)
                     timeR.setText("Time: " + time)
                     timeR.setEnabled(false)
-                    vegetarianR.setText("Vegetarian " + veg.toString())
+                    vegetarianR.setText("Vegetarian: " + veg.toString())
                     vegetarianR.setEnabled(false)
 
 

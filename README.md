@@ -1,6 +1,6 @@
 # Anna-s-Recipes
 
-## Andoid project made in Kotlin that implements the most important concepts in android development: -Recycle View -Custom View -Persistence (Room database) -HTTP request -Complex UI (map, fragment and others)
+Andoid project made in Kotlin that implements the most important concepts in android development: -Recycle View -Custom View -Persistence (Room database) -HTTP request -Complex UI (map, fragment and others)
 
 
 ![photo_2020-12-09_15-08-22](https://user-images.githubusercontent.com/33528244/137466485-66d1e1d1-551c-46fd-87a0-e90cda9ac44e.jpg)
